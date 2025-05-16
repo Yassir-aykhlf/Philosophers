@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:09:09 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/15 12:06:06 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/16 10:54:42 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,25 @@ typedef struct s_context
 	int	num_meals;
 }	t_context;
 
+/* Utilities */
 void			error_exit(char *message);
 int				ft_atoi(const char *str);
 int				ft_strlen(const char *str);
+
+/* Time functions */
 unsigned long	get_timestamp_ms(void);
 unsigned long	*get_start_time(void);
 unsigned long	get_current_time(void);
 void			init_start_time(void);
+
+/* Context functions */
 void			init_context(int argc, char **argv, t_context *context);
+
+/* Simulation functions */
+void			simulate_eating(t_context context, int philo_id);
+void			simulate_sleeping(t_context context, int philo_id);
+void			simulate_thinking(t_context context, int philo_id);
+void			simulate_dying(t_context context, int philo_id);
+int				simulate_philosopher(t_context context);
 
 #endif

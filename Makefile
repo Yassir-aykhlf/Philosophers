@@ -3,7 +3,7 @@ NAME = philo
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-SRC = philo.c utils.c getters.c init.c
+SRC = philo.c utils.c getters.c init.c simulation.c
 OBJ = $(SRC:.c=.o)
 HEADERS = philo.h
 
