@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:21:19 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/15 11:34:15 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/25 15:44:35 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,43 @@ void	init_start_time(void)
 	*start_time = get_timestamp_ms();
 }
 
-void	init_context(int argc, char **argv, t_context *context)
+void	validate_args(t_simulation *sim)
 {
-	context->num_philos = ft_atoi(argv[1]);
-	context->time_to_die = ft_atoi(argv[2]);
-	context->time_to_eat = ft_atoi(argv[3]);
-	context->time_to_sleep = ft_atoi(argv[4]);
+	if (sim->num_philos < 1 || sim->time_to_die < 0 || 
+		sim->time_to_eat < 0 || sim->time_to_sleep < 0)
+		error_exit("Invalid arguments.\n");
+}
+
+int	init_philosophers(t_simulation *sim)
+{
+	int	i;
+
+	sim->philosophers = malloc(sizeof(t_philosopher) * sim->num_philos);
+	if (!sim->philosophers)
+		return (1);
+	i = 0;
+	while (i < sim->num_philos)
+	{
+		sim->philosophers[i].id = i + 1;
+		sim->philosophers[i].meals_eaten = 0;
+		sim->philosophers[i].sim = sim;
+		i++;
+	}
+	return (0);
+}
+
+int	init_simulation(int argc, char **argv, t_simulation *sim)
+{
+	sim->num_philos = ft_atoi(argv[1]);
+	sim->time_to_die = ft_atoi(argv[2]);
+	sim->time_to_eat = ft_atoi(argv[3]);
+	sim->time_to_sleep = ft_atoi(argv[4]);
 	if (argc == MAX_ARGS)
-		context->num_meals = ft_atoi(argv[5]);
+		sim->num_meals = ft_atoi(argv[5]);
 	else
-		context->num_meals = -1;
+		sim->num_meals = -1;
+	validate_args(sim);
+	if (init_philosophers(sim) != 0)
+		return (1);
+	return (0);
 }
