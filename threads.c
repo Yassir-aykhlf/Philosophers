@@ -1,0 +1,67 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   threads.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/25 18:56:57 by yaykhlf           #+#    #+#             */
+/*   Updated: 2025/05/25 18:13:55 by codespace        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "philo.h"
+
+int	create_threads(t_simulation *sim)
+{
+	int	i;
+	int	result;
+
+	i = 0;
+	while (i < sim->num_philos)
+	{
+		result = pthread_create(&sim->philosophers[i].thread, NULL,
+				philosopher_routine, &sim->philosophers[i]);
+		if (result != 0)
+		{
+			printf("Error creating thread for philosopher %d\n", i + 1);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	wait_for_threads(t_simulation *sim)
+{
+	int	i;
+	int	result;
+
+	i = 0;
+	while (i < sim->num_philos)
+	{
+		result = pthread_join(sim->philosophers[i].thread, NULL);
+		if (result != 0)
+		{
+			printf("Error joining thread for philosopher %d\n", i + 1);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	start_simulation(t_simulation *sim)
+{
+	if (create_threads(sim) != 0)
+		return (1);
+	if (wait_for_threads(sim) != 0)
+		return (1);
+	return (0);
+}
+
+void	destroy_simulation(t_simulation *sim)
+{
+	if (sim->philosophers)
+		free(sim->philosophers);
+}

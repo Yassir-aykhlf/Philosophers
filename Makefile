@@ -4,7 +4,7 @@ CC = cc
 CFLAGS = -g3 -Wall -Wextra -Werror
 LDFLAGS = -pthread
 
-SRC = philo.c utils.c getters.c init.c simulation.c special_cases.c
+SRC = philo.c utils.c getters.c init.c simulation.c special_cases.c threads.c routines.c
 OBJ = $(SRC:.c=.o)
 HEADERS = philo.h
 
