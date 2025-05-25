@@ -15,6 +15,7 @@
 void	simulate_eating(t_context context, int philo_id)
 {
 	printf("%lu %d has taken a fork\n", get_current_time(), philo_id);
+	printf("%lu %d has taken a fork\n", get_current_time(), philo_id);
 	printf("%lu %d is eating\n", get_current_time(), philo_id);
 	usleep(context.time_to_eat * MICROS_PER_MILLI);
 }
@@ -29,6 +30,7 @@ void	simulate_thinking(t_context context, int philo_id)
 {
 	(void)context;
 	printf("%lu %d is thinking\n", get_current_time(), philo_id);
+	usleep(1000);
 }
 
 void	simulate_dying(t_context context, int philo_id)
@@ -43,8 +45,8 @@ int	simulate_philosopher(t_context context)
 	int	philo_id;
 
 	meals_eaten = 0;
-	philo_id = 1; 
-
+	philo_id = 1;
+	handle_single_philo(context, philo_id);
 	while (meals_eaten < context.num_meals || context.num_meals == -1)
 	{
 		if (context.num_meals != -1)

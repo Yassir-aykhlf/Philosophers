@@ -12,13 +12,20 @@
 
 #include "philo.h"
 
+void	*philosopher_lifecycle(void *arg)
+{
+	t_context	*context;
+
+	context = (t_context *)arg;
+	simulate_philosopher(*context);
+	return (NULL);
+}
+
 int	main(int argc, char **argv)
 {
 	t_context	context;
+	pthread_t	philosopher_thread;
 
-	// Set up the context
-	// Create the philophers thread
-	// wait for the threads to finish
 	init_start_time();
 	if (argc > MAX_ARGS || argc < MIN_ARGS)
 		error_exit(USAGE);
@@ -26,6 +33,9 @@ int	main(int argc, char **argv)
 	if (context.num_philos < 1 || context.time_to_die < 0
 		|| context.time_to_eat < 0 || context.time_to_sleep < 0)
 		error_exit(USAGE);
-	simulate_philosopher(context);
+	if (pthread_create(&philosopher_thread, NULL, philosopher_lifecycle, &context) != 0)
+		error_exit("Failed to create thread\\n");
+	if (pthread_join(philosopher_thread, NULL) != 0)
+		error_exit("Failed to join thread\\n");
 	return (0);
 }

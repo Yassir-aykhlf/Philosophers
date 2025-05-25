@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:09:09 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/16 10:54:42 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/25 14:18:35 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/time.h>
+# include <pthread.h>
 
 # define MICROS_PER_MILLI 1000
 # define MAX_ARGS 6
@@ -53,5 +54,8 @@ void			simulate_sleeping(t_context context, int philo_id);
 void			simulate_thinking(t_context context, int philo_id);
 void			simulate_dying(t_context context, int philo_id);
 int				simulate_philosopher(t_context context);
+
+/* Special Cases */
+void			handle_single_philo(t_context context, int philo_id);
 
 #endif
