@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:21:19 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/25 15:44:35 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/25 18:55:42 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void	init_start_time(void)
 
 void	validate_args(t_simulation *sim)
 {
-	if (sim->num_philos < 1 || sim->time_to_die < 0 || 
-		sim->time_to_eat < 0 || sim->time_to_sleep < 0)
+	if (sim->num_philos < 1 || sim->time_to_die < 0
+		|| sim->time_to_eat < 0 || sim->time_to_sleep < 0)
 		error_exit("Invalid arguments.\n");
 }
 

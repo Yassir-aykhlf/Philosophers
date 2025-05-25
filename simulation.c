@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 10:54:58 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/25 17:34:48 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/25 18:56:57 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ void	*philosopher_routine(void *arg)
 		handle_single_philo(*(philo->sim), philo->id);
 	while (cycles < 5)
 	{
-		if (philo->sim->num_meals != -1 && 
-			philo->meals_eaten >= philo->sim->num_meals)
-			break;
+		if (philo->sim->num_meals != -1
+			&& philo->meals_eaten >= philo->sim->num_meals)
+			break ;
 		philo_think(philo);
 		philo_eat(philo);
 		philo_sleep(philo);
@@ -71,8 +71,8 @@ int	create_threads(t_simulation *sim)
 	i = 0;
 	while (i < sim->num_philos)
 	{
-		result = pthread_create(&sim->philosophers[i].thread, NULL, 
-								philosopher_routine, &sim->philosophers[i]);
+		result = pthread_create(&sim->philosophers[i].thread, NULL,
+				philosopher_routine, &sim->philosophers[i]);
 		if (result != 0)
 		{
 			printf("Error creating thread for philosopher %d\n", i + 1);
