@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 18:56:57 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/25 18:13:55 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/26 10:46:10 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,9 @@ int	start_simulation(t_simulation *sim)
 
 void	destroy_simulation(t_simulation *sim)
 {
+	destroy_forks(sim);
+	pthread_mutex_destroy(&sim->print_mutex);
+	pthread_mutex_destroy(&sim->sim_mutex);
 	if (sim->philosophers)
 		free(sim->philosophers);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:21:19 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/25 18:55:42 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/26 10:43:04 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,21 @@ int	init_philosophers(t_simulation *sim)
 		sim->philosophers[i].id = i + 1;
 		sim->philosophers[i].meals_eaten = 0;
 		sim->philosophers[i].sim = sim;
+		sim->philosophers[i].left_fork = i;
+		sim->philosophers[i].right_fork = (i + 1) % sim->num_philos;
 		i++;
+	}
+	return (0);
+}
+
+int	init_mutexes(t_simulation *sim)
+{
+	if (pthread_mutex_init(&sim->print_mutex, NULL) != 0)
+		return (1);
+	if (pthread_mutex_init(&sim->sim_mutex, NULL) != 0)
+	{
+		pthread_mutex_destroy(&sim->print_mutex);
+		return (1);
 	}
 	return (0);
 }
@@ -55,8 +69,20 @@ int	init_simulation(int argc, char **argv, t_simulation *sim)
 		sim->num_meals = ft_atoi(argv[5]);
 	else
 		sim->num_meals = -1;
+	sim->simulation_stop = 0;
 	validate_args(sim);
 	if (init_philosophers(sim) != 0)
 		return (1);
+	if (init_forks(sim) != 0)
+	{
+		free(sim->philosophers);
+		return (1);
+	}
+	if (init_mutexes(sim) != 0)
+	{
+		destroy_forks(sim);
+		free(sim->philosophers);
+		return (1);
+	}
 	return (0);
 }

@@ -3,22 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   special_cases.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 18:54:41 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/25 19:01:37 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/26 10:53:25 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	handle_single_philo(t_simulation sim, int philo_id)
+void	handle_single_philo(t_philosopher *philo)
 {
-	if (sim.num_philos == 1)
+	if (philo->sim->num_philos == 1)
 	{
-		printf("%lu %d has taken a fork\n", get_current_time(), philo_id);
-		usleep(sim.time_to_die * MICROS_PER_MILLI);
-		printf("%lu %d has died\n", get_current_time(), philo_id);
-		exit(EXIT_SUCCESS);
+		pthread_mutex_lock(&philo->sim->print_mutex);
+		printf("%lu %d has taken a fork\n", get_current_time(), philo->id);
+		pthread_mutex_unlock(&philo->sim->print_mutex);
+		usleep(philo->sim->time_to_die * MICROS_PER_MILLI);
+		pthread_mutex_lock(&philo->sim->print_mutex);
+		printf("%lu %d has died\n", get_current_time(), philo->id);
+		pthread_mutex_unlock(&philo->sim->print_mutex);
+		return (NULL);
 	}
 }

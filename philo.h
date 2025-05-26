@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:09:09 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/25 17:22:09 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/26 10:54:31 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdio.h>
 # include <stdlib.h>
+# include <stdbool.h>
 # include <unistd.h>
 # include <sys/time.h>
 # include <pthread.h>
@@ -33,6 +34,8 @@ typedef struct s_philosopher
 	int				id;
 	int				meals_eaten;
 	unsigned long	last_meal_time;
+	int				left_fork;
+	int				right_fork;
 	pthread_t		thread;
 	t_simulation	*sim;
 }	t_philosopher;
@@ -52,21 +55,17 @@ typedef struct s_simulation
 	t_philosopher	*philosophers;
 }	t_simulation;
 
-/* Utilities */
 void			error_exit(char *message);
 int				ft_atoi(const char *str);
 int				ft_strlen(const char *str);
 
-/* Time functions */
 unsigned long	get_timestamp_ms(void);
 unsigned long	*get_start_time(void);
 unsigned long	get_current_time(void);
 void			init_start_time(void);
 
-/* sim functions */
 int				init_simulation(int argc, char **argv, t_simulation *sim);
 
-/* Simulation functions */
 void			philo_eat(t_philosopher *philo);
 void			philo_sleep(t_philosopher *philo);
 void			philo_think(t_philosopher *philo);
@@ -78,7 +77,6 @@ int				wait_for_threads(t_simulation *sim);
 int				start_simulation(t_simulation *sim);
 void			destroy_simulation(t_simulation *sim);
 
-/* Special Cases */
-void			handle_single_philo(t_simulation sim, int philo_id);
+void			handle_single_philo(t_philosopher *philo);
 
 #endif
