@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:09:09 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/26 10:54:31 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/26 15:44:43 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,22 @@ unsigned long	get_current_time(void);
 void			init_start_time(void);
 
 int				init_simulation(int argc, char **argv, t_simulation *sim);
+int				init_philosophers(t_simulation *sim);
+int				init_mutexes(t_simulation *sim);
+void			validate_args(t_simulation *sim);
 
+int				init_forks(t_simulation *sim);
+void			destroy_forks(t_simulation *sim);
+
+int				take_forks(t_philosopher *philo);
+void			put_down_forks(t_philosopher *philo);
 void			philo_eat(t_philosopher *philo);
 void			philo_sleep(t_philosopher *philo);
 void			philo_think(t_philosopher *philo);
 void			philo_die(t_philosopher *philo);
 void			*philosopher_lifecycle(void *arg);
 void			*philosopher_routine(void *arg);
+bool			must_stop_simulation(t_philosopher *philo);
 int				create_threads(t_simulation *sim);
 int				wait_for_threads(t_simulation *sim);
 int				start_simulation(t_simulation *sim);
