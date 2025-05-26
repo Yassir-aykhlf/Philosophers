@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 18:56:57 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/26 10:46:10 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/26 17:25:35 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	create_threads(t_simulation *sim)
+int	create_philos_threads(t_simulation *sim)
 {
 	int	i;
 	int	result;
@@ -32,7 +32,7 @@ int	create_threads(t_simulation *sim)
 	return (0);
 }
 
-int	wait_for_threads(t_simulation *sim)
+int	wait_for_philos_threads(t_simulation *sim)
 {
 	int	i;
 	int	result;
@@ -53,9 +53,23 @@ int	wait_for_threads(t_simulation *sim)
 
 int	start_simulation(t_simulation *sim)
 {
-	if (create_threads(sim) != 0)
+	int	i;
+
+	i = 0;
+	while (i < sim->num_philos)
+	{
+		pthread_mutex_lock(&sim->philosophers[i].meal_mutex);
+		sim->philosophers[i].last_meal_time = get_current_time();
+		pthread_mutex_unlock(&sim->philosophers[i].meal_mutex);
+		i++;
+	}
+	if (create_philos_threads(sim) != 0)
 		return (1);
-	if (wait_for_threads(sim) != 0)
+	if (create_monitor_thread(sim) != 0)
+		return (1);
+	if (wait_for_philos_threads(sim) != 0)
+		return (1);
+	if (wait_for_monitor_thread(sim) != 0)
 		return (1);
 	return (0);
 }

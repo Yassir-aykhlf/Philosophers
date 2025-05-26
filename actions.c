@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 10:54:58 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/26 14:40:22 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/26 18:30:33 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,13 @@ void	put_down_forks(t_philosopher *philo)
 
 void	philo_eat(t_philosopher *philo)
 {
+	if (simulation_stopped(philo))
+		return ;
 	take_forks(philo);
-	pthread_mutex_lock(&philo->sim->print_mutex);
-	if (philo->sim->simulation_stop == false)
-	{
-		printf("%lu %d is eating\n", get_current_time(), philo->id);
-		philo->last_meal_time = get_current_time();
-	}
-	pthread_mutex_unlock(&philo->sim->print_mutex);
+	update_last_meal_time(philo);
+	print_eat_message(philo);
 	usleep(philo->sim->time_to_eat * MICROS_PER_MILLI);
-	philo->meals_eaten++;
+	increase_meals_eaten(philo);
 	put_down_forks(philo);
 }
 
@@ -76,5 +73,4 @@ void	philo_think(t_philosopher *philo)
 	if (philo->sim->simulation_stop == false)
 		printf("%lu %d is thinking\n", get_current_time(), philo->id);
 	pthread_mutex_unlock(&philo->sim->print_mutex);
-	usleep(1000);
 }

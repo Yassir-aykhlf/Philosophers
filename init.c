@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:21:19 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/26 10:43:04 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/26 17:36:38 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,6 @@ void	init_start_time(void)
 
 	start_time = get_start_time();
 	*start_time = get_timestamp_ms();
-}
-
-void	validate_args(t_simulation *sim)
-{
-	if (sim->num_philos < 1 || sim->time_to_die < 0
-		|| sim->time_to_eat < 0 || sim->time_to_sleep < 0)
-		error_exit("Invalid arguments.\n");
 }
 
 int	init_philosophers(t_simulation *sim)
@@ -39,9 +32,17 @@ int	init_philosophers(t_simulation *sim)
 	{
 		sim->philosophers[i].id = i + 1;
 		sim->philosophers[i].meals_eaten = 0;
+		sim->philosophers[i].last_meal_time = 0;
 		sim->philosophers[i].sim = sim;
 		sim->philosophers[i].left_fork = i;
 		sim->philosophers[i].right_fork = (i + 1) % sim->num_philos;
+		if (pthread_mutex_init(&sim->philosophers[i].meal_mutex, NULL) != 0)
+		{
+			while (--i >= 0)
+				pthread_mutex_destroy(&sim->philosophers[i].meal_mutex);
+			free(sim->philosophers);
+			return (1);
+		}
 		i++;
 	}
 	return (0);
