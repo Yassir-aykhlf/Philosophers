@@ -6,22 +6,20 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 18:56:57 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/26 12:34:12 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/26 13:27:52 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-bool	must_stop_simulation(t_simulation *sim)
+bool	must_stop_simulation(t_philosopher *philo)
 {
-	if (sim->simulation_stop)
+	if (philo->sim->simulation_stop)
 		return (true);
-	for (int i = 0; i < sim->num_philos; i++)
-	{
-		if (sim->philosophers[i].meals_eaten < sim->num_meals)
-			return (false);
-	}
-	return (true);
+	if (philo->sim->num_meals != -1
+		&& philo->meals_eaten >= philo->sim->num_meals)
+		return (true);
+	return (false);
 }
 
 void	*philosopher_routine(void *arg)
@@ -34,7 +32,7 @@ void	*philosopher_routine(void *arg)
 	while (true)
 	{
 		pthread_mutex_lock(&philo->sim->sim_mutex);
-		if (must_stop_simulation(philo->sim))
+		if (must_stop_simulation(philo))
 		{
 			pthread_mutex_unlock(&philo->sim->sim_mutex);
 			break ;
