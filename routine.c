@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 18:56:57 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/26 13:27:52 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/26 13:30:05 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,12 @@ void	*philosopher_routine(void *arg)
 		philo_sleep(philo);
 	}
 	return (NULL);
+}
+
+void	philo_die(t_philosopher *philo)
+{
+	printf("%lu %d has died\n", get_current_time(), philo->id);
+	pthread_mutex_lock(&philo->sim->print_mutex);
+	philo->sim->simulation_stop = 1;
+	pthread_mutex_unlock(&philo->sim->print_mutex);
 }
