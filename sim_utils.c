@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 17:35:44 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/26 17:37:14 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/26 20:29:38 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,18 @@ int	wait_for_monitor_thread(t_simulation *sim)
 		return (1);
 	}
 	return (0);
+}
+
+void	setup_last_meal_time(t_simulation *sim)
+{
+	int	i;
+
+	i = 0;
+	while (i < sim->num_philos)
+	{
+		pthread_mutex_lock(&sim->philosophers[i].meal_mutex);
+		sim->philosophers[i].last_meal_time = get_current_time();
+		pthread_mutex_unlock(&sim->philosophers[i].meal_mutex);
+		i++;
+	}
 }

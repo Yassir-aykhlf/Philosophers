@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:11:25 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/15 12:04:33 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/26 20:23:55 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,19 @@ int	ft_strlen(const char *str)
 	while (str[i])
 		i++;
 	return (i);
+}
+
+void	check_args(int argc, char **argv)
+{
+	int	i;
+
+	i = 1;
+	if (argc < MIN_ARGS || argc > MAX_ARGS)
+		error_exit(USAGE);
+	while (i < argc)
+	{
+		if (ft_atoi(argv[i]) <= 0)
+			error_exit("Arguments must be positive integers.\n");
+		i++;
+	}
 }

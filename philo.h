@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:09:09 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/26 17:56:35 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/26 20:29:14 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_simulation
 void			error_exit(char *message);
 int				ft_atoi(const char *str);
 int				ft_strlen(const char *str);
+void			check_args(int argc, char **argv);
 
 void			*monitor_routine(void *arg);
 bool			check_philosopher_death(t_philosopher *philo);
@@ -88,12 +89,12 @@ void			philo_eat(t_philosopher *philo);
 void			philo_sleep(t_philosopher *philo);
 void			philo_think(t_philosopher *philo);
 void			philo_die(t_philosopher *philo);
-void			*philosopher_lifecycle(void *arg);
 void			*philosopher_routine(void *arg);
 bool			must_stop_simulation(t_philosopher *philo);
 int				create_philos_threads(t_simulation *sim);
 int				wait_for_philos_threads(t_simulation *sim);
 int				start_simulation(t_simulation *sim);
+void			setup_last_meal_time(t_simulation *sim);
 void			destroy_simulation(t_simulation *sim);
 
 void			handle_single_philo(t_philosopher *philo);

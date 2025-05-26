@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 18:56:57 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/26 17:25:35 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/26 20:29:54 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,7 @@ int	wait_for_philos_threads(t_simulation *sim)
 
 int	start_simulation(t_simulation *sim)
 {
-	int	i;
-
-	i = 0;
-	while (i < sim->num_philos)
-	{
-		pthread_mutex_lock(&sim->philosophers[i].meal_mutex);
-		sim->philosophers[i].last_meal_time = get_current_time();
-		pthread_mutex_unlock(&sim->philosophers[i].meal_mutex);
-		i++;
-	}
+	setup_last_meal_time(sim);
 	if (create_philos_threads(sim) != 0)
 		return (1);
 	if (create_monitor_thread(sim) != 0)
