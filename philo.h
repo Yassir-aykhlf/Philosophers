@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:09:09 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/27 15:28:57 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/27 15:42:13 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,10 @@ typedef struct s_simulation
 	t_philosopher	*philosophers;
 }	t_simulation;
 
-void			error_exit(char *message);
+void			print_error(char *message);
 int				ft_atoi(const char *str);
 int				ft_strlen(const char *str);
-void			check_args(int argc, char **argv);
+int				check_args(int argc, char **argv);
 
 void			*monitor_routine(void *arg);
 bool			check_philosopher_death(t_philosopher *philo);
@@ -79,7 +79,7 @@ void			init_start_time(void);
 int				init_simulation(int argc, char **argv, t_simulation *sim);
 int				init_philosophers(t_simulation *sim);
 int				init_mutexes(t_simulation *sim);
-void			validate_args(t_simulation *sim);
+int				validate_args(t_simulation *sim);
 int				simulation_stopped(t_philosopher *philo);
 
 int				init_forks(t_simulation *sim);

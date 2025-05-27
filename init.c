@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:21:19 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/27 14:13:44 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/27 15:42:13 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ int	init_simulation(int argc, char **argv, t_simulation *sim)
 	else
 		sim->num_meals = -1;
 	sim->simulation_stop = 0;
-	validate_args(sim);
+	if (validate_args(sim) != EXIT_SUCCESS)
+		return (EXIT_FAILURE);
 	if (init_philosophers(sim) != 0)
 		return (EXIT_FAILURE);
 	if (init_forks(sim) != 0)
