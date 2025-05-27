@@ -80,6 +80,15 @@ The monitor thread continuously checks philosopher health:
 # Compile
 make
 
+# Clean build (recommended after structure changes)
+make clean && make
+
+# Debug build with debug symbols
+make debug
+
+# See all available build targets
+make help
+
 # Run simulation
 ./philo [num_philosophers] [time_to_die] [time_to_eat] [time_to_sleep] [optional: meals_required]
 
@@ -141,20 +150,34 @@ The implementation handles various edge cases:
 
 ```
 philosophers/
-├── philo.c           # Main entry point and initialization
-├── philo.h           # Type definitions and function prototypes
-├── actions.c         # Philosopher actions (eat, sleep, think)
-├── init.c            # Simulation and philosopher initialization
-├── monitor.c         # Death detection and simulation monitoring
-├── threads.c         # Thread creation and management
-├── resources.c       # Fork (mutex) management
-├── timing.c          # Precision timing utilities
-├── log_utils.c       # Thread-safe logging functions
-├── sim_utils.c       # Simulation utility functions
-├── special_cases.c   # Edge case handling
-├── utils.c           # General utilities and argument parsing
-├── getters.c         # Timestamp and time management
-└── Makefile          # Build configuration
+├── include/              # Header files
+│   └── philo.h          # Type definitions and function prototypes
+├── src/                 # Source code organized by functionality
+│   ├── core/            # Core application logic
+│   │   ├── philo.c      # Main entry point and initialization
+│   │   ├── init.c       # Simulation and philosopher initialization
+│   │   ├── threads.c    # Thread creation and management
+│   │   └── routine.c    # Main philosopher routine logic
+│   ├── actions/         # Philosopher actions and fork management
+│   │   ├── actions.c    # Philosopher actions (eat, sleep, think)
+│   │   ├── actions_utils.c # Action utility functions
+│   │   └── forks.c      # Fork (mutex) management
+│   ├── monitor/         # Simulation monitoring
+│   │   ├── monitor.c    # Death detection and simulation monitoring
+│   │   └── monitor_utils.c # Monitoring utility functions
+│   └── utils/           # General utilities
+│       ├── utils.c      # General utilities and argument parsing
+│       ├── getters.c    # Timestamp and time management
+│       ├── log_utils.c  # Thread-safe logging functions
+│       ├── sim_utils.c  # Simulation utility functions
+│       ├── timing.c     # Precision timing utilities
+│       └── special_cases.c # Edge case handling
+├── obj/                 # Object files (mirrors src structure)
+├── docs/                # Documentation
+│   └── PROJECT_STRUCTURE.md # Detailed project organization guide
+├── build/               # Build artifacts
+├── Makefile            # Enhanced build configuration
+└── README.md           # This file
 ```
 
 ## Technical Specifications
@@ -165,6 +188,16 @@ philosophers/
 - **Platform**: Unix-like systems (Linux, macOS)
 - **Memory Management**: Manual allocation with comprehensive cleanup
 - **Synchronization**: Mutex-based with deadlock prevention
+- **Build System**: Enhanced Makefile with organized object file structure
+- **Project Organization**: Modular structure with separated concerns
+
+### Build Features
+
+- **Organized Build**: Object files stored in `obj/` directory mirroring source structure
+- **Automatic Dependencies**: Header dependency tracking
+- **Debug Support**: `make debug` for development builds
+- **Clean Separation**: Source and build artifacts kept separate
+- **Help System**: `make help` shows available targets
 
 ## Thread Safety Guarantees
 
@@ -203,3 +236,13 @@ This implementation demonstrates mastery of:
 - **System Programming**: POSIX APIs and low-level timing
 - **Software Architecture**: Modular design and separation of concerns
 - **Performance Optimization**: Efficient algorithms and data structures
+- **Project Organization**: Professional C project structure and build systems
+
+### Code Organization Benefits
+
+The structured layout provides:
+- **Maintainability**: Related functionality grouped in logical modules
+- **Scalability**: Easy addition of new features without cluttering
+- **Clarity**: Clear separation between core logic, actions, monitoring, and utilities
+- **Professional Standards**: Follows industry conventions for C projects
+- **Build Efficiency**: Organized object files and dependency management
