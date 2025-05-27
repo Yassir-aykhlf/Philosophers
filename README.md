@@ -1,122 +1,205 @@
-# Philosophers
+# Philosophers - Dining Philosophers Problem
 
-A high-quality implementation of the classic dining philosophers problem in C, demonstrating advanced concurrent programming concepts and best practices.
+A high-performance, thread-safe implementation of the classic Dining Philosophers synchronization problem using POSIX threads in C. This solution demonstrates advanced concurrent programming techniques, precise timing mechanisms, and robust resource management.
 
-## Features
+## Problem Overview
 
-- **Thread-safe implementation** with proper mutex usage
-- **Deadlock prevention** using ordered resource allocation
-- **Precise timing** with custom sleep function for better accuracy
-- **Race condition protection** throughout the codebase
-- **Memory leak prevention** with proper cleanup
-- **Robust error handling** for all system calls
-- **Optimized performance** with minimal resource usage
+The Dining Philosophers problem illustrates fundamental challenges in concurrent programming: resource sharing, deadlock prevention, and synchronization. Five (or N) philosophers sit around a table with forks between them, alternating between thinking, eating, and sleeping. Each philosopher needs two forks to eat, creating potential for deadlock and starvation.
 
-## Architecture
+## Architecture & Design
 
 ### Core Components
 
-- `philo.c` - Main entry point and initialization
-- `actions.c` - Philosopher actions (eat, sleep, think)
-- `monitor.c` - Death detection and simulation monitoring
-- `threads.c` - Thread management and lifecycle
-- `timing.c` - Precise timing utilities
-- `resources.c` - Fork/mutex management
-- `utils.c` - Input validation and utility functions
+- **Simulation Engine**: Central coordinator managing the entire dining session
+- **Philosopher Threads**: Individual threads representing each philosopher's lifecycle  
+- **Monitor Thread**: Dedicated watchdog for death detection and completion monitoring
+- **Resource Management**: Thread-safe fork allocation with deadlock prevention
+- **Precision Timing**: Microsecond-accurate sleep implementation for realistic simulation
 
-### Thread Safety Features
+### Thread Safety Strategy
 
-1. **Ordered fork acquisition** prevents circular wait deadlocks
-2. **Atomic state checks** prevent race conditions
-3. **Protected shared resources** with appropriate mutexes
-4. **Safe simulation termination** without data races
+```c
+typedef struct s_simulation {
+    pthread_mutex_t *forks;        // Per-fork mutexes
+    pthread_mutex_t print_mutex;   // Synchronized output
+    pthread_mutex_t sim_mutex;     // Simulation state protection
+    // ... other fields
+} t_simulation;
+```
 
-### Performance Optimizations
+The implementation employs multiple mutex layers:
+- **Fork mutexes**: Prevent simultaneous fork access
+- **Meal mutexes**: Protect individual philosopher meal tracking
+- **Print mutex**: Ensure atomic output operations
+- **Simulation mutex**: Guard global simulation state
 
-1. **Precise microsleep** implementation for accurate timing
-2. **Thinking time calculation** to prevent busy waiting
-3. **Optimized monitor intervals** for responsive death detection
-4. **Thread staggering** to reduce initial contention
+### Deadlock Prevention
+
+The solution implements **resource ordering** to prevent circular wait conditions:
+
+```c
+// Philosophers acquire forks in consistent order (lower ID first)
+if (philo->left_fork < philo->right_fork) {
+    first_fork = philo->left_fork;
+    second_fork = philo->right_fork;
+} else {
+    first_fork = philo->right_fork;
+    second_fork = philo->left_fork;
+}
+```
+
+This approach ensures no circular dependency chains can form, mathematically guaranteeing deadlock-free execution.
+
+## Key Features
+
+### High-Precision Timing
+Custom `precise_usleep()` implementation provides microsecond accuracy:
+- Hybrid approach: `usleep()` for coarse delays, busy-waiting for precision
+- Prevents timing drift in long simulations
+- Optimized for both performance and accuracy
+
+### Intelligent Philosopher Scheduling
+- **Even-numbered philosophers**: Start with 1ms delay to reduce contention
+- **Odd philosopher count**: Dynamic thinking time calculation prevents starvation
+- **Optimized fork acquisition**: Minimizes blocking time
+
+### Death Detection
+The monitor thread continuously checks philosopher health:
+- Non-blocking health checks using separate meal mutexes
+- Atomic simulation termination on death detection
+- Race condition prevention in death reporting
+
+### Memory Management
+- Comprehensive resource cleanup on all exit paths
+- Proper mutex destruction sequence
+- Exception-safe initialization with rollback on failure
 
 ## Usage
 
 ```bash
-./philo [num_philosophers] [time_to_die] [time_to_eat] [time_to_sleep] [optional: num_meals]
+# Compile
+make
+
+# Run simulation
+./philo [num_philosophers] [time_to_die] [time_to_eat] [time_to_sleep] [optional: meals_required]
+
+# Examples
+./philo 5 800 200 200        # 5 philosophers, basic simulation
+./philo 4 410 200 200        # Edge case: should not die
+./philo 5 800 200 200 7      # Stop after 7 meals per philosopher
 ```
 
-### Examples
+### Parameters
+- `num_philosophers`: Number of philosophers (1-200)
+- `time_to_die`: Maximum time between meals (ms)
+- `time_to_eat`: Duration of eating (ms)  
+- `time_to_sleep`: Duration of sleeping (ms)
+- `meals_required`: Optional meal limit per philosopher
+
+## Implementation Details
+
+### Thread Lifecycle
+Each philosopher follows this state machine:
+1. **Think**: Calculate optimal thinking duration
+2. **Acquire Forks**: Use ordered acquisition to prevent deadlock
+3. **Eat**: Update meal tracking atomically
+4. **Sleep**: Rest for specified duration
+5. **Repeat** until death or meal completion
+
+### Special Cases Handled
+- **Single Philosopher**: Cannot eat (only one fork available)
+- **Even Philosopher Count**: Staggered start prevents initial contention
+- **Odd Philosopher Count**: Dynamic thinking time prevents starvation
+- **Race Conditions**: All shared state access is mutex-protected
+
+### Performance Optimizations
+- Minimal mutex hold times
+- Efficient monitor polling (100μs intervals)
+- Lock-free simulation state checks where possible
+- Optimized fork acquisition ordering
+
+## Testing Scenarios
+
+The implementation handles various edge cases:
 
 ```bash
-# Basic test with 4 philosophers
+# No deaths should occur
 ./philo 4 410 200 200
+./philo 5 800 200 200
 
-# Test with meal limit
-./philo 5 800 200 200 7
+# Tight timing (deaths may occur)
+./philo 4 310 200 100
 
-# Stress test
-./philo 200 410 200 200
+# Large scale
+./philo 100 800 200 200
+
+# Meal completion
+./philo 5 800 200 200 5
 ```
 
-## Code Quality Improvements Made
+## Project Structure
 
-### Critical Bug Fixes
-- Fixed race conditions in simulation state checks
-- Corrected timestamp calculation for millisecond precision
-- Fixed return values in utility functions
-- Added proper integer overflow protection
+```
+philosophers/
+├── philo.c           # Main entry point and initialization
+├── philo.h           # Type definitions and function prototypes
+├── actions.c         # Philosopher actions (eat, sleep, think)
+├── init.c            # Simulation and philosopher initialization
+├── monitor.c         # Death detection and simulation monitoring
+├── threads.c         # Thread creation and management
+├── resources.c       # Fork (mutex) management
+├── timing.c          # Precision timing utilities
+├── log_utils.c       # Thread-safe logging functions
+├── sim_utils.c       # Simulation utility functions
+├── special_cases.c   # Edge case handling
+├── utils.c           # General utilities and argument parsing
+├── getters.c         # Timestamp and time management
+└── Makefile          # Build configuration
+```
 
-### Thread Safety Enhancements
-- Implemented atomic access to shared variables
-- Added proper mutex ordering to prevent deadlocks
-- Protected all critical sections appropriately
-- Fixed data races in monitoring logic
+## Technical Specifications
 
-### Performance Improvements
-- Replaced `usleep()` with precise timing function
-- Added intelligent thinking time calculation
-- Optimized monitor checking frequency
-- Reduced unnecessary system calls
+- **Language**: C (C99 standard)
+- **Threading**: POSIX Threads (pthread)
+- **Compiler**: GCC with `-Wall -Wextra -Werror` flags
+- **Platform**: Unix-like systems (Linux, macOS)
+- **Memory Management**: Manual allocation with comprehensive cleanup
+- **Synchronization**: Mutex-based with deadlock prevention
 
-### Memory Management
-- Added comprehensive cleanup for all mutexes
-- Fixed potential memory leaks in error conditions
-- Proper resource deallocation ordering
+## Thread Safety Guarantees
 
-### Error Handling
-- Enhanced input validation with range checking
-- Added proper error propagation
-- Improved thread creation failure handling
-- Better error messages for debugging
+- **Data Race Freedom**: All shared data access is mutex-protected
+- **Deadlock Freedom**: Resource ordering prevents circular waits
+- **Livelock Prevention**: Randomized delays and intelligent scheduling
+- **Starvation Resistance**: Fair resource allocation algorithms
 
-### Code Organization
-- Centralized status printing to reduce code duplication
-- Improved function naming and consistency
-- Better separation of concerns
-- Enhanced readability and maintainability
+## Performance Characteristics
 
-## Technical Details
+- **Scalability**: Tested up to 200 philosophers
+- **Latency**: Sub-millisecond response to death conditions
+- **Memory Usage**: O(n) space complexity
+- **CPU Efficiency**: Minimal busy-waiting, optimized mutex usage
 
-### Deadlock Prevention
-Uses the "ordered resource allocation" strategy where philosophers always pick up the lower-numbered fork first, preventing circular wait conditions.
+## Advanced Features
 
-### Timing Precision
-Custom `precise_usleep()` function combines `usleep()` with active waiting for sub-millisecond accuracy, crucial for passing strict timing tests.
+### Adaptive Thinking Time
+For odd philosopher counts, thinking time is dynamically calculated:
+```c
+think_time = (time_to_eat * 2) - time_to_sleep;
+```
+This prevents starvation in asymmetric scenarios.
 
-### Death Detection
-Monitor thread runs with high frequency (100μs intervals) to detect philosopher deaths as quickly as possible while minimizing CPU usage.
+### Graceful Degradation
+The system handles resource exhaustion gracefully:
+- Failed thread creation triggers cleanup
+- Memory allocation failures are handled safely
+- Partial initialization states are properly cleaned up
 
-### Thread Synchronization
-Multiple mutex types:
-- **Fork mutexes**: One per fork for resource protection
-- **Print mutex**: Prevents mixed output
-- **Simulation mutex**: Protects global state
-- **Meal mutexes**: Individual philosopher meal tracking
+## Learning Outcomes
 
-## Compliance
-
-This implementation follows:
-- **42 School norminette** coding standards
-- **POSIX threading** specifications
-- **Memory safety** best practices
-- **Thread safety** guidelines
-- **Performance optimization** principles
+This implementation demonstrates mastery of:
+- **Concurrent Programming**: Thread synchronization and communication
+- **Deadlock Prevention**: Resource ordering and careful lock management
+- **System Programming**: POSIX APIs and low-level timing
+- **Software Architecture**: Modular design and separation of concerns
+- **Performance Optimization**: Efficient algorithms and data structures
