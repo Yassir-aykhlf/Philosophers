@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:11:25 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/26 20:23:55 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/27 10:27:57 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 void	error_exit(char *message)
 {
-	write(2, message, ft_strlen(message));
+	write(STDERR_FILENO, message, ft_strlen(message));
 	exit(EXIT_FAILURE);
 }
 
 int	ft_atoi(const char *str)
 {
-	int	sign;
-	int	result;
+	int		sign;
+	long	result;
 
 	sign = 1;
 	result = 0;
@@ -36,9 +36,11 @@ int	ft_atoi(const char *str)
 	while (*str >= '0' && *str <= '9')
 	{
 		result = result * 10 + (*str - '0');
+		if (result * sign > INT_MAX || result * sign < INT_MIN)
+			return (0);
 		str++;
 	}
-	return (result * sign);
+	return ((int)(result * sign));
 }
 
 int	ft_strlen(const char *str)
@@ -56,14 +58,18 @@ int	ft_strlen(const char *str)
 void	check_args(int argc, char **argv)
 {
 	int	i;
+	int	value;
 
 	i = 1;
 	if (argc < MIN_ARGS || argc > MAX_ARGS)
 		error_exit(USAGE);
 	while (i < argc)
 	{
-		if (ft_atoi(argv[i]) <= 0)
+		value = ft_atoi(argv[i]);
+		if (value <= 0)
 			error_exit("Arguments must be positive integers.\n");
+		if (i == 1 && value > 200)
+			error_exit("Too many philosophers (max 200).\n");
 		i++;
 	}
 }

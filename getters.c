@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:25:37 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/15 12:05:36 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/27 10:27:57 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ unsigned long	get_timestamp_ms(void)
 	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * MICROS_PER_MILLI + (tv.tv_usec / MICROS_PER_MILLI));
+	return (tv.tv_sec * 1000UL + tv.tv_usec / 1000UL);
 }
 
 unsigned long	*get_start_time(void)

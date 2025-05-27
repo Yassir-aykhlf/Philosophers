@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:21:19 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/26 17:36:38 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/27 09:59:46 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	init_philosophers(t_simulation *sim)
 
 	sim->philosophers = malloc(sizeof(t_philosopher) * sim->num_philos);
 	if (!sim->philosophers)
-		return (1);
+		return (EXIT_FAILURE);
 	i = 0;
 	while (i < sim->num_philos)
 	{
@@ -41,23 +41,23 @@ int	init_philosophers(t_simulation *sim)
 			while (--i >= 0)
 				pthread_mutex_destroy(&sim->philosophers[i].meal_mutex);
 			free(sim->philosophers);
-			return (1);
+			return (EXIT_FAILURE);
 		}
 		i++;
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
 int	init_mutexes(t_simulation *sim)
 {
 	if (pthread_mutex_init(&sim->print_mutex, NULL) != 0)
-		return (1);
+		return (EXIT_FAILURE);
 	if (pthread_mutex_init(&sim->sim_mutex, NULL) != 0)
 	{
 		pthread_mutex_destroy(&sim->print_mutex);
-		return (1);
+		return (EXIT_FAILURE);
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
 int	init_simulation(int argc, char **argv, t_simulation *sim)
@@ -73,17 +73,17 @@ int	init_simulation(int argc, char **argv, t_simulation *sim)
 	sim->simulation_stop = 0;
 	validate_args(sim);
 	if (init_philosophers(sim) != 0)
-		return (1);
+		return (EXIT_FAILURE);
 	if (init_forks(sim) != 0)
 	{
 		free(sim->philosophers);
-		return (1);
+		return (EXIT_FAILURE);
 	}
 	if (init_mutexes(sim) != 0)
 	{
 		destroy_forks(sim);
 		free(sim->philosophers);
-		return (1);
+		return (EXIT_FAILURE);
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }

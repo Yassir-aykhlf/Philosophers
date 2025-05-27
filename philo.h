@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:09:09 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/26 20:29:14 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/27 10:27:57 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <unistd.h>
 # include <sys/time.h>
 # include <pthread.h>
+# include <limits.h>
 
 # define MICROS_PER_MILLI 1000
 # define MONITOR_INTERVAL 1000
@@ -98,8 +99,10 @@ void			setup_last_meal_time(t_simulation *sim);
 void			destroy_simulation(t_simulation *sim);
 
 void			handle_single_philo(t_philosopher *philo);
+void			print_status(t_philosopher *philo, char *status);
 void			print_eat_message(t_philosopher *philo);
 void			update_last_meal_time(t_philosopher *philo);
 void			increase_meals_eaten(t_philosopher *philo);
+void			precise_usleep(unsigned long duration_ms);
 
 #endif

@@ -1,27 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   timing.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/16 10:54:51 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/27 09:59:46 by yaykhlf          ###   ########.fr       */
+/*   Created: 2025/05/27 10:00:00 by yaykhlf           #+#    #+#             */
+/*   Updated: 2025/05/27 10:27:57 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	main(int argc, char **argv)
+void	precise_usleep(unsigned long duration_ms)
 {
-	t_simulation	sim;
+	unsigned long	start;
+	unsigned long	elapsed;
 
-	init_start_time();
-	check_args(argc, argv);
-	if (init_simulation(argc, argv, &sim) != 0)
-		error_exit("Error initializing simulation.\n");
-	if (start_simulation(&sim) != 0)
-		error_exit("Error starting simulation.\n");
-	destroy_simulation(&sim);
-	return (EXIT_SUCCESS);
+	start = get_current_time();
+	while (1)
+	{
+		elapsed = get_current_time() - start;
+		if (elapsed >= duration_ms)
+			break ;
+		if (duration_ms - elapsed > 10)
+			usleep((duration_ms - elapsed) * 500);
+		else
+			usleep(100);
+	}
 }

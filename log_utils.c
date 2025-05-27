@@ -6,18 +6,23 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 17:44:58 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/26 17:45:13 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/27 10:27:57 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	print_eat_message(t_philosopher *philo)
+void	print_status(t_philosopher *philo, char *status)
 {
 	pthread_mutex_lock(&philo->sim->print_mutex);
 	if (philo->sim->simulation_stop == false)
-		printf("%lu %d is eating\n", get_current_time(), philo->id);
+		printf("%lu %d %s\n", get_current_time(), philo->id, status);
 	pthread_mutex_unlock(&philo->sim->print_mutex);
+}
+
+void	print_eat_message(t_philosopher *philo)
+{
+	print_status(philo, "is eating");
 }
 
 void	update_last_meal_time(t_philosopher *philo)

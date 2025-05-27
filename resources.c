@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 15:47:27 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/26 15:47:48 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/27 09:59:46 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	init_forks(t_simulation *sim)
 
 	sim->forks = malloc(sizeof(pthread_mutex_t) * sim->num_philos);
 	if (!sim->forks)
-		return (1);
+		return (EXIT_FAILURE);
 	i = 0;
 	while (i < sim->num_philos)
 	{
@@ -27,11 +27,11 @@ int	init_forks(t_simulation *sim)
 			while (--i >= 0)
 				pthread_mutex_destroy(&sim->forks[i]);
 			free(sim->forks);
-			return (1);
+			return (EXIT_FAILURE);
 		}
 		i++;
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
 void	destroy_forks(t_simulation *sim)

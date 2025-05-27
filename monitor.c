@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 17:04:13 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/26 19:01:18 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/27 10:27:57 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	*monitor_routine(void *arg)
 				break ;
 			i++;
 		}
-		usleep(MONITOR_INTERVAL);
+		usleep(100);
 	}
 	return (NULL);
 }
