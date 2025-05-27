@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:09:09 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/27 11:41:03 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/27 15:28:57 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_philosopher
 	int				id;
 	int				meals_eaten;
 	unsigned long	last_meal_time;
+	bool			is_eating;
 	int				left_fork;
 	int				right_fork;
 	pthread_t		thread;
@@ -84,6 +85,8 @@ int				simulation_stopped(t_philosopher *philo);
 int				init_forks(t_simulation *sim);
 void			destroy_forks(t_simulation *sim);
 
+void			assign_fork_order(t_philosopher *philo,
+					int *first_fork, int *second_fork);
 int				take_forks(t_philosopher *philo);
 void			put_down_forks(t_philosopher *philo);
 void			philo_eat(t_philosopher *philo);

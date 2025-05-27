@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:11:25 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/27 10:27:57 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/27 15:33:44 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,13 @@ int	ft_strlen(const char *str)
 	while (str[i])
 		i++;
 	return (i);
+}
+
+void	validate_args(t_simulation *sim)
+{
+	if (sim->num_philos < 1 || sim->time_to_die < 0
+		|| sim->time_to_eat < 0 || sim->time_to_sleep < 0)
+		error_exit("Invalid arguments.\n");
 }
 
 void	check_args(int argc, char **argv)

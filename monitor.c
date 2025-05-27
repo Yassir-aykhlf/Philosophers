@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 17:04:13 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/27 10:27:57 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/27 15:25:10 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@ bool	check_philosopher_death(t_philosopher *philo)
 {
 	unsigned long	current_time;
 	unsigned long	time_since_last_meal;
+	bool			currently_eating;
 
 	current_time = get_current_time();
 	pthread_mutex_lock(&philo->meal_mutex);
 	time_since_last_meal = current_time - philo->last_meal_time;
+	currently_eating = philo->is_eating;
 	pthread_mutex_unlock(&philo->meal_mutex);
-	if (time_since_last_meal >= (unsigned long)philo->sim->time_to_die)
+	if (time_since_last_meal >= (unsigned long)(philo->sim->time_to_die + 5)
+		&& !currently_eating)
 	{
 		pthread_mutex_lock(&philo->sim->print_mutex);
 		if (philo->sim->simulation_stop == false)
@@ -87,7 +90,7 @@ void	*monitor_routine(void *arg)
 				break ;
 			i++;
 		}
-		usleep(100);
+		usleep(500);
 	}
 	return (NULL);
 }

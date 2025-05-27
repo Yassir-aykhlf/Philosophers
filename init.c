@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:21:19 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/27 09:59:46 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/27 14:13:44 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	init_philosophers(t_simulation *sim)
 		sim->philosophers[i].id = i + 1;
 		sim->philosophers[i].meals_eaten = 0;
 		sim->philosophers[i].last_meal_time = 0;
+		sim->philosophers[i].is_eating = false;
 		sim->philosophers[i].sim = sim;
 		sim->philosophers[i].left_fork = i;
 		sim->philosophers[i].right_fork = (i + 1) % sim->num_philos;

@@ -6,7 +6,7 @@
 /*   By: yaykhlf <yaykhlf@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 18:56:57 by yaykhlf           #+#    #+#             */
-/*   Updated: 2025/05/27 10:39:46 by yaykhlf          ###   ########.fr       */
+/*   Updated: 2025/05/27 15:30:57 by yaykhlf          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,22 +44,14 @@ void	*philosopher_routine(void *arg)
 		return (NULL);
 	}
 	if (philo->id % 2 == 0)
-		precise_usleep(1);
+		precise_usleep(philo->sim->time_to_eat / 2);
 	while (true)
 	{
 		if (must_stop_simulation(philo))
 			break ;
-		philo_think(philo);
 		philo_eat(philo);
 		philo_sleep(philo);
+		philo_think(philo);
 	}
 	return (NULL);
-}
-
-void	philo_die(t_philosopher *philo)
-{
-	printf("%lu %d has died\n", get_current_time(), philo->id);
-	pthread_mutex_lock(&philo->sim->sim_mutex);
-	philo->sim->simulation_stop = 1;
-	pthread_mutex_unlock(&philo->sim->sim_mutex);
 }
